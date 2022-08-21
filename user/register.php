@@ -45,6 +45,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($password != $confirm_password) {
         $isValid = false;
     }
+
+    //check if email is valid
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $isValid = false;
+    }
+    //check if all fields are set
+    if ($fname == null || $lname == null || $email == null || $username == null || $password == null || $confirm_password == null) {
+        $isValid = false;
+    }
+
+
     if ($isValid) {
         $hashed_password = password_hash($password, PASSWORD_BCRYPT);
         require_once(__DIR__ . "/../lib/db.php");
@@ -56,11 +67,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $r = $stmt->execute($params);
         $e = $stmt->errorInfo();
         if ($e[0] != "00000") {
-            echo json_encode(array("error" => "Error inserting user into database"));
+            echo json_encode(array(
+                "header" => array("status" => 400),
+                "body" => array(
+                    "error" => "There was an error creating your account. Please try again."
+                )
+            ));
         } elseif ($e[0] == "23000") {
-            echo json_encode(array("warning" => "User already exists"));
+            echo json_encode(array(
+                "header" => array("status" => 400),
+                "body" => array(
+                    "error" => "There was an error creating your account. Please try again."
+                )
+            ));
         } else {
-            echo json_encode(array("success" => "User successfully added"));
+            echo json_encode(array(
+                "header" => array("status" => 200),
+                "body" => array(
+                    "success" => "Account created successfully."
+                )
+            ));
         }
+    } else {
+        echo json_encode(array(
+            "header" => array("status" => 400),
+            "body" => array(
+                "error" => "An error occurred. Please try again."
+            )
+        ));
     }
 }
