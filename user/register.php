@@ -67,33 +67,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $r = $stmt->execute($params);
         $e = $stmt->errorInfo();
         if ($e[0] != "00000") {
+            http_response_code(401);
             echo json_encode(array(
-                "header" => array("status" => 400),
-                "body" => array(
-                    "error" => "There was an error creating your account. Please try again."
-                )
+                "error" => "There was an error creating your account. Please try again."
             ));
         } elseif ($e[0] == "23000") {
+            http_response_code(401);
             echo json_encode(array(
-                "header" => array("status" => 400),
-                "body" => array(
-                    "error" => "There was an error creating your account. Please try again."
-                )
+                "error" => "There was an error creating your account. Please try again."
             ));
         } else {
+            http_response_code(200);
             echo json_encode(array(
-                "header" => array("status" => 200),
-                "body" => array(
-                    "success" => "Account created successfully."
-                )
+                "success" => "Account created successfully."
             ));
         }
     } else {
+        http_response_code(401);
         echo json_encode(array(
-            "header" => array("status" => 400),
-            "body" => array(
-                "error" => "An error occurred. Please try again."
-            )
+            "error" => "An error occurred. Please try again."
         ));
     }
 }

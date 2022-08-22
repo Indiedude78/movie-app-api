@@ -1,0 +1,22 @@
+{
+    "name": "smit/movie-api",
+    "description": "An API for the Svelte Movie App",
+    "type": "project",
+    "require": {
+        "firebase/php-jwt": "^6.3"
+    },
+    "require-dev": {
+        "firebase/php-jwt": "^6.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Smit\\MovieApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Indiedude78",
+            "email": "saj39@njit.edu"
+        }
+    ]
+}

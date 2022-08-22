@@ -1,4 +1,10 @@
 <?php
+//include necessary files
+require_once('../lib/secret_key.php');
+require_once('../vendor/autoload.php');
+
+use \Firebase\JWT\JWT;
+
 //set headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -46,8 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (password_verify($password, $hash)) {
                 unset($user["password"]);
                 unset($hash);
+                $secret_key = $key;
+                $issuer_claim = "dev-server"; //this can be the domain name of the server
+                $audience_claim = "app";
+                $issuedat_claim = time(); // issued at
+                $notbefore_claim = $issuedat_claim + 10; //not before in seconds
+                $expire_claim = $issuedat_claim + (7 * 24 * 60 * 60); //expire time in seconds
                 $data = array(
-                    "header" => array("status" => 200),
+                    "iss" => $issuer_claim,
+                    "aud" => $audience_claim,
+                    "iat" => $issuedat_claim,
+                    "nbf" => $notbefore_claim,
+                    "exp" => $expire_claim,
                     "body" => array(
                         "id" => $user["id"],
                         "firstname" => $user["fname"],
@@ -56,30 +72,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         "username" => $user["username"]
                     )
                 );
-                $json = json_encode($data);
+                $jwt = JWT::encode($data, $secret_key, "HS256");
+                $json = json_encode(array(
+                    "message" => "Successful login.",
+                    "jwt" => $jwt
+                ));
+                http_response_code(200);
                 echo $json;
             } else {
+                http_response_code(401);
                 echo json_encode(array(
-                    "header" => array("status" => 400),
-                    "body" => array(
-                        "error" => "Invalid username or password"
-                    )
+                    "error" => "Invalid username or password"
                 ));
             }
         } else {
+            http_response_code(401);
             echo json_encode(array(
-                "header" => array("status" => 400),
-                "body" => array(
-                    "error" => "Invalid username or password"
-                )
+                "error" => "Invalid username or password"
             ));
         }
     } else {
+        http_response_code(401);
         echo json_encode(array(
-            "header" => array("status" => 400),
-            "body" => array(
-                "error" => "An error has occurred"
-            )
+            "error" => "Invalid username or password"
         ));
     }
 }
