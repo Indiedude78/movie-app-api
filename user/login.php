@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $issuer_claim = "dev-server"; //this can be the domain name of the server
                 $audience_claim = "app";
                 $issuedat_claim = time(); // issued at
-                $notbefore_claim = $issuedat_claim + 10; //not before in seconds
+                $notbefore_claim = $issuedat_claim; //not before in seconds
                 $expire_claim = $issuedat_claim + (7 * 24 * 60 * 60); //expire time in seconds
                 $data = array(
                     "iss" => $issuer_claim,
