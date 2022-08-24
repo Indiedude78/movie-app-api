@@ -15,9 +15,7 @@ error_reporting(E_ERROR);
 $secret_key = $key;
 $data = json_decode(file_get_contents("php://input"));
 $jwt = null;
-$jwt = $data->token;
-
-//$jwt = isset($data->token) ? $data->token : null;
+$jwt = isset($data->token) ? $data->token : null;
 if ($jwt) {
     try {
         $decoded = JWT::decode($jwt, new Key($secret_key, 'HS256'));
