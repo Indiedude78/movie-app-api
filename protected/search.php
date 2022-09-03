@@ -34,6 +34,7 @@ if ($jwt) {
                 http_response_code(200);
                 $response = array(
                     "status" => "success",
+                    "type" => "db",
                     "data" => array(
                         "user_id" => $user_id,
                         "movies" => $movies
@@ -79,6 +80,7 @@ if ($jwt) {
                     if ($e[0] != "00000") {
                         http_response_code(500);
                         echo json_encode(array(
+                            "status" => "error",
                             "message" => "Error inserting movie into database.",
                             "error" => $e[2]
                         ));
@@ -86,9 +88,10 @@ if ($jwt) {
                         http_response_code(200);
                         $response = array(
                             "status" => "success",
+                            "type" => "api",
                             "data" => array(
                                 "user_id" => $user_id,
-                                "movies" => $movie_data
+                                "movies" => $movie_data->Search
                             )
                         );
                         echo json_encode($response);
@@ -96,6 +99,7 @@ if ($jwt) {
                 } else {
                     http_response_code(500);
                     echo json_encode(array(
+                        "status" => "error",
                         "message" => "Server error.",
                         "error" => $err
                     ));
@@ -104,6 +108,7 @@ if ($jwt) {
         } else {
             http_response_code(401);
             echo json_encode(array(
+                "status" => "error",
                 "message" => "Access denied.",
                 "error" => "No token provided.",
             ));
@@ -111,6 +116,7 @@ if ($jwt) {
     } catch (Exception $e) {
         http_response_code(401);
         echo json_encode(array(
+            "status" => "error",
             "message" => "Access denied.",
             "error" => $e->getMessage()
         ));
