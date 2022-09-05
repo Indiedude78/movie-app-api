@@ -1,9 +1,20 @@
-CREATE TABLE IF NOT EXISTS Movie_details (
+CREATE TABLE IF NOT EXISTS `Movie_details` (
     `id` INT NOT NULL AUTO_INCREMENT,
     `movie_id` INT NOT NULL,
     `imdb_id` VARCHAR(255) NOT NULL,
-    `title` VARCHAR(255) NOT NULL,
-    `description` TEXT NOT NULL,
+    `maturity_rating` VARCHAR(8) DEFAULT NULL,
+    `runtime` VARCHAR(15) DEFAULT NULL,
+    `genre` VARCHAR(255) DEFAULT NULL,
+    `director` VARCHAR(255) DEFAULT NULL,
+    `writer` VARCHAR(255) DEFAULT NULL,
+    `actors` VARCHAR(255) DEFAULT NULL,
+    `plot` TEXT DEFAULT NULL,
+    `language` VARCHAR(255) DEFAULT NULL,
+    `country` VARCHAR(255) DEFAULT NULL,
+    `awards` VARCHAR(255) DEFAULT NULL,
+    `metascore` VARCHAR(255) DEFAULT NULL,
+    `imdb_rating` VARCHAR(255) DEFAULT NULL,
+    `box_office` VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (movie_id) REFERENCES Movies(id),
     FOREIGN KEY (imdb_id) REFERENCES Movies(imdb_id)
