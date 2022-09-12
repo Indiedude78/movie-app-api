@@ -85,16 +85,25 @@ if ($jwt) {
                             "error" => $e[2]
                         ));
                     } else {
-                        http_response_code(200);
-                        $response = array(
-                            "status" => "success",
-                            "type" => "api",
-                            "data" => array(
-                                "user_id" => $user_id,
-                                "movies" => $movie_data->Search
-                            )
+                        $query = "SELECT * FROM Movies WHERE title LIKE :search_request";
+                        $stmt = $db->prepare($query);
+                        $params = array(
+                            ":search_request" => '%' . $search_request . '%'
                         );
-                        echo json_encode($response);
+                        $stmt->execute($params);
+                        $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        if ($movies && count($movies) > 0) {
+                            http_response_code(200);
+                            $response = array(
+                                "status" => "success",
+                                "type" => "db",
+                                "data" => array(
+                                    "user_id" => $user_id,
+                                    "movies" => $movies
+                                )
+                            );
+                            echo json_encode($response);
+                        }
                     }
                 } else {
                     http_response_code(500);
